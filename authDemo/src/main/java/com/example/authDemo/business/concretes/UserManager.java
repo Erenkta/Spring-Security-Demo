@@ -1,5 +1,6 @@
 package com.example.authDemo.business.concretes;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserManager implements UserService {
 	
+	@Autowired
 	private final UserDao userDao;
 	private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
 	
