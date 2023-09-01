@@ -3,12 +3,6 @@ package com.example.authDemo.entities.concretes;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.example.authDemo.core.utils.UserRole;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,6 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.authDemo.core.utils.UserRole;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,26 +33,25 @@ public class User implements UserDetails { //Spring Securty'nin UserDetails inte
 	@SequenceGenerator(name = "user_sequence",sequenceName = "user_sequence",allocationSize = 1)
 	@GeneratedValue(strategy =GenerationType.SEQUENCE ,generator = "user_sequence")
 	private long id;
-	private String name;
-	private String username;
+	private String firstName;
+	private String lastName;
 	private String email;
 	private String password;
 	@Enumerated(EnumType.STRING) //Bunun bir enum olduğunu belirtmemiz gerekiyor
 	private UserRole userRole;
-	private Boolean locked;
-	private Boolean enabled;
+	//Alttaki ikisine default bir value verdik
+	private Boolean locked = false;
+	private Boolean enabled = false;
 	
 
-	public User(String name, String username, String email, String password, UserRole userRole, Boolean locked,Boolean enabled) {
-		//Bunu oluşturma sebebimiz id vermeden bir User oluşturmak istiyoruz
+	public User(String name, String username, String email, String password, UserRole userRole) {
+		//Bunu oluşturma sebebimiz id ,locked,enabled vermeden bir User oluşturmak istiyoruz
 		super();
-		this.name = name;
-		this.username = username;
+		this.firstName = name;
+		this.lastName = username;
 		this.email = email;
 		this.password = password;
 		this.userRole = userRole;
-		this.locked = locked;
-		this.enabled = enabled;
 	}
 
 	
@@ -71,7 +70,7 @@ public class User implements UserDetails { //Spring Securty'nin UserDetails inte
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return username;
+		return email;
 	}
 
 	@Override
