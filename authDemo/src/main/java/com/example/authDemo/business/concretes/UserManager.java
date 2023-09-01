@@ -1,6 +1,8 @@
 package com.example.authDemo.business.concretes;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.authDemo.business.abstracts.UserService;
+import com.example.authDemo.core.token.ConfirmationToken;
+import com.example.authDemo.core.token.ConfirmationTokenService;
 import com.example.authDemo.dataAccess.abstracts.UserDao;
 import com.example.authDemo.entities.concretes.User;
 
@@ -22,6 +26,7 @@ public class UserManager implements UserService {
 	private final UserDao userDao;
 	private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
 	private final BCryptPasswordEncoder passwordEncoder;
+	private final ConfirmationTokenService confirmationTokenService;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,9 +48,27 @@ public class UserManager implements UserService {
 		
 		userDao.save(user);
 		
-		
 		// TODO: send confirmation token
-		return "it works";
+		//Token oluşturup kaydedeceğiz
+		String token = UUID.randomUUID().toString(); //Rastgele bir token oluşturduk
+		ConfirmationToken confirmationToken = new ConfirmationToken( //Doğrulama token'ini de oluşturduk
+					user,
+					token,
+					LocalDateTime.now(),
+					LocalDateTime.now().plusMinutes(15)
+				);
+		
+		confirmationTokenService.saveConfirmationToken(confirmationToken);
+// 		TODO : send email
+		return token;
+	}
+
+	@Override
+	public void enableUser(String email) {
+		Optional<User> inDb = userDao.findByEmail(email);
+		if(inDb.isPresent()) {
+			inDb.get().setEnabled(true);
+		}
 	}
 
 }

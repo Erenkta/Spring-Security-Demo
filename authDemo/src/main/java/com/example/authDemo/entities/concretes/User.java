@@ -76,7 +76,7 @@ public class User implements UserDetails { //Spring Securty'nin UserDetails inte
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false; //kullanmayacağımızdan dolayı true verdik
+		return true; //kullanmayacağımızdan dolayı true verdik
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class User implements UserDetails { //Spring Securty'nin UserDetails inte
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false; //bunu da kullanmayacağımızdan dolayı true verdik
+		return true; //bunu da kullanmayacağımızdan dolayı true verdik
 	}
 
 	@Override
